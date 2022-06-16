@@ -1,0 +1,36 @@
+-
+  name: Prepare all the nodes in the cluster.
+  hosts: all_nodes
+    #vars_files: /root/k8s_multi_master_deployment/roles/node_preparation/vars/hosts_var.yaml
+  roles:
+    - node_preparation
+    - docker_installation
+    - k8s_installation
+
+-
+  name: Configure the load balancer.
+  hosts: loadbalancer
+  roles:
+    - lb_configuration
+
+-
+  name: Master node configuration.
+  hosts: initial_master
+  roles:
+    - master_configuration
+
+- name: Joining other master node to kubernetes cluster.
+  hosts: other_master
+  roles:
+    - master_joining
+
+- name: Deploy dashboard for kubernetes cluster.
+  hosts: initial_master
+  roles:
+    - dashboard_configuration
+
+- name: Joing the worker nodes into the kubernetes cluster.
+  hosts: worker
+  roles:
+    - worker_joining
+
