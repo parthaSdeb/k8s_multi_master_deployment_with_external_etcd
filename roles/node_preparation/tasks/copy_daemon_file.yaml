@@ -1,0 +1,11 @@
+---
+  - name: Copy daemon.json file from control node to k8s cluster nodes.
+    ansible.builtin.copy:
+      src: files/daemon.json
+      dest: /etc/docker/daemon.json
+      owner: root
+      group: root
+      mode: '0644'
+    notify:
+      - restart_docker
+

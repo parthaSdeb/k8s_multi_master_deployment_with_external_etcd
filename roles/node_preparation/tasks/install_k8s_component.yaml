@@ -1,0 +1,19 @@
+---
+  - name: Adding google cloud gpg key for kubernetes.
+    ansible.builtin.shell: curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+
+  - name: Adding Kubernetes repository.
+    apt_repository:
+      repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+      state: present
+      filename: kubernetes
+
+  - name: Updating the repositories.
+    apt:
+      update_cache: yes
+
+  - name: Installing Kubeadm, Kubectl, Kubelet packages on the machine.
+    apt:
+      name: [kubeadm=1.21.13-00, kubectl=1.21.13-00, kubelet=1.21.13-00]
+      state: present
+

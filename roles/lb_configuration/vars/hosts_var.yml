@@ -1,0 +1,21 @@
+---
+master1_ip: 192.168.122.60
+master1_fqdn: kmaster1.example.com
+master1_hostname: kmaster1
+
+master2_ip: 192.168.122.61
+master2_fqdn: kmaster2.example.com
+master2_hostname: kmaster2
+
+worker1_ip: 192.168.122.62
+worker1_fqdn: kworker1.example.com
+worker1_hostname: kworker1
+
+worker2_ip: 192.168.122.63
+worker2_fqdn: kworker2.example.com
+worker2_hostname: kworker2
+  
+lb_ip: 192.168.122.64
+lb_fqdn: kloadbalancer.example.com
+lb_hostname: kloadbalancer
+

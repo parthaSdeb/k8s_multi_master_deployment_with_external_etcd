@@ -1,0 +1,79 @@
+#---
+## tasks file for node_preparation
+#vars_files: vars/hosts_var.yaml
+  - name: including necessary variable files.
+    include_vars:
+      file: hosts_var.yaml
+
+  - name: Disabling swap from the systems.
+    ansible.builtin.shell: swapoff -a
+
+  - name: Commentput swap entry from fstab file.
+    replace:
+      path: /etc/fstab
+      regexp: '(^/.*swap*)'
+      replace: '# \1'
+
+        #  - name: Making host file entry for all the nodes in k8s cluster.
+        #    ansible.builtin.copy:
+        #      src: /root/k8s_single_master_deployment/files/hosts
+        #      dest: /etc/hosts
+        #      owner: root
+        #      mode: '0644'
+
+  - name: Replacing hosts.j2 tempplate to managed nodes /etc/hosts.
+    ansible.builtin.template:
+      src: templates/hosts.j2
+      dest: /etc/hosts
+      owner: root
+      mode: '0644' 
+
+
+  - name: Enabling overlay module.
+    community.general.modprobe:
+      name: overlay
+      state: present
+
+  - name: Enabling br_netfilter module.
+    community.general.modprobe:
+      name: br_netfilter
+      state: present
+
+  - ansible.posix.sysctl:
+      name: vm.swappiness
+      value: '0'
+      state: present
+
+  - ansible.posix.sysctl:
+      name: net.bridge.bridge-nf-call-ip6tables
+      value: '1'
+      state: present
+
+  - ansible.posix.sysctl:
+      name: net.bridge.bridge-nf-call-iptables
+      value: '1'
+      state: present
+
+  - ansible.posix.sysctl:
+      name: net.ipv4.ip_forward
+      value: '1'
+      state: present
+
+  - name: Stop the firewall.
+    ansible.builtin.service:
+      name: firewalld
+      state: stopped
+
+#---
+#  vars_files: vars/hosts_var.yaml
+#- include: vars/hosts_var.yaml
+#
+#  - include_tasks: disable_swap.yaml
+#  - include_tasks: making_host_file_entry.yaml
+#  - include_tasks: enabling_kernel_module.yaml
+#  - include_tasks: sysctl_file_entry.yaml
+#  - include_tasks: firewall_config.yaml
+#  - include_tasks: docker_installation.yaml
+#  - include_tasks: copy_daemon_file.yaml
+#  - include_tasks: delete_config_toml_file.yaml
+#  - include_tasks: install_k8s_component.yaml

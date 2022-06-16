@@ -1,0 +1,7 @@
+---
+  - name: Delete the config.toml file from /etc/containerd.
+    ansible.builtin.file:
+      path: /etc/containerd/config.toml
+      state: absent
+    notify:
+      - reestart_containerd

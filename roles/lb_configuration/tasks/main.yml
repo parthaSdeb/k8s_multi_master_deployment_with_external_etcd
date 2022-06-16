@@ -1,0 +1,23 @@
+# tasks file for lb_configuration
+---
+  - name: Including necessary variables.
+    include_vars:
+      file: /root/k8s_multi_master_deployment/roles/node_preparation/vars/hosts_var.yaml
+
+  - name: Update the os repository.
+    apt:
+      update_cache: yes
+
+  - name: Install haproxy loadbalancer.
+    apt:
+      name: haproxy
+      state: present
+
+  - name: Replacing the haproxy.j2 template from control node to lb nodes /etc/haproxy/haproxy.cfg file.
+    ansible.builtin.template:
+      src: templates/haproxy.j2
+      dest: /etc/haproxy/haproxy.cfg
+      owner: root
+      mode: '0644'
+    notify:
+      - restart_haproxy

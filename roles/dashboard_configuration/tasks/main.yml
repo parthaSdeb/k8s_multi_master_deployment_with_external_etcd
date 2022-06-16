@@ -1,0 +1,47 @@
+# tasks file for dashboard_configuration
+---
+  - name: Creating seperate directory for keeping dashboard files separate from other config file.
+    ansible.builtin.file:
+      path: /root/dashboard
+      state: directory
+      mode: '0755'
+
+  - name: Download the dashboard file.
+    get_url:
+      url: https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
+      dest: /root/dashboard
+
+  - name: Deploy deshboard manifest file.
+    ansible.builtin.shell: kubectl apply -f /root/dashboard/recommended.yaml
+
+  - name: Moving service account related template file for admin-user from admin node to master node.
+    ansible.builtin.template:
+      src: templates/servie-account.j2
+      dest: /root/dashboard/service-account.yaml
+      owner: root
+      mode: '0755'
+
+  - name: Creating service-account for admin-user.
+    ansible.builtin.shell: kubectl apply -f /root/dashboard/service-account.yaml
+
+  - name: Moving ClusterRoleBinding template from admin node to master node.
+    ansible.builtin.template:
+      src: templates/rbac.j2
+      dest: /root/dashboard/rbac.yaml
+      owner: root
+      mode: '0755'
+
+  - name: Creating ClusterRoleBinding for admin-user.
+    ansible.builtin.shell: kubectl apply -f /root/dashboard/rbac.yaml
+
+  - name: Generated token for accessing the dashboard.
+    ansible.builtin.shell: kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
+    register: token_result
+  - debug:
+      var: token_result.stdout_lines
+
+  - name: Notice -> Check the message.
+    ansible.builtin.shell: echo "We have to manually change the dashboard services type from clusterIP to NodePort in order to access the dashboard from browser."
+    register: notice
+  - debug:
+      var: notice.stdout_lines 

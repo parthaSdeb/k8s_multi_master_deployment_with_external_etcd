@@ -1,0 +1,17 @@
+# tasks file for worker_joining
+---
+  - name: Esure docker service is running.
+    ansible.builtin.service:
+      name: docker
+      state: started
+  
+  - name: Copy worker_join_command file from admin node to k8s worker nodes.
+    ansible.builtin.copy:
+      src: /root/worker_join_command
+      dest: /root/worker_join_command
+
+  - name: Joining the worker nodes within the k8s cluster.
+    ansible.builtin.shell: sh /root/worker_join_command
+    register: worker_join_result
+  - debug:
+      var: worker_join_result.stdout_lines

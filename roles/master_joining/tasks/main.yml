@@ -1,0 +1,17 @@
+# tasks file for master_joining
+---
+  - name: Ensuring docker service is running.
+    ansible.builtin.service:
+      name: docker
+      state: started
+
+  - name: Copy the master_join_command file from admin node to k8s masters node.
+    ansible.builtin.copy:
+      src: /root/master_join_command
+      dest: /root/master_join_command
+
+  - name: Join the other master nodes within the k8s cluster.
+    ansible.builtin.shell: sh /root/master_join_command
+    register: master_join_result
+  - debug:
+      var: master_join_result.stdout_lines

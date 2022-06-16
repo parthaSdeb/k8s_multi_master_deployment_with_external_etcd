@@ -1,0 +1,3 @@
+# vars file for node_preparation
+---
+  - include: vars/hosts_var.yaml

@@ -1,0 +1,18 @@
+# handlers file for node_preparation
+---
+#  handlers:
+  - name: restart_docker
+    ansible.builtin.service:
+      name: docker
+      state: restarted
+
+  - name: reestart_containerd
+    ansible.builtin.service:
+      name: containerd
+      state: restarted
+
+  - name: restart_haproxy
+    ansible.builtin.service:
+      name: haproxy
+      state: restarted
+

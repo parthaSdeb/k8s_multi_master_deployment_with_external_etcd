@@ -1,0 +1,7 @@
+---
+  - name: Making host file entry for all the nodes in k8s cluster.
+    ansible.builtin.copy:
+      src: files/hosts
+      dest: /etc/hosts
+      owner: root
+      mode: '0644'

@@ -1,0 +1,9 @@
+---
+  - name: Disabling swap from the systems.
+    ansible.builtin.shell: swapoff -a
+
+  - name: Commentput swap entry from fstab file.
+    replace:
+      path: /etc/fstab
+      regexp: '(^/.*swap*)'
+      replace: '# \1'
