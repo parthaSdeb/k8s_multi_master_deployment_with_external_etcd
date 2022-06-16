@@ -1,0 +1,21 @@
+[master]
+kmaster1 ansible_host=192.168.122.60 ansible_connection=ssh ansible_user=root ansible_ssh_pass=root
+kmaster2 ansible_host=192.168.122.61 ansible_connection=ssh ansible_user=root ansible_ssh_pass=root
+
+[worker]
+kworker1 ansible_host=192.168.122.62 ansible_connection=ssh ansible_user=root ansible_ssh_pass=root
+kworker2 ansible_host=192.168.122.63 ansible_connection=ssh ansible_user=root ansible_ssh_pass=root
+
+[loadbalancer]
+kloadbalancer ansible_host=192.168.122.64 ansible_connection=ssh ansible_user=root ansible_ssh_pass=root
+
+[initial_master]
+kmaster1 ansible_host=192.168.122.60 ansible_connection=ssh ansible_user=root ansible_ssh_pass=root
+
+[other_master]
+kmaster2 ansible_host=192.168.122.61 ansible_connection=ssh ansible_user=root ansible_ssh_pass=root
+
+
+[all_nodes:children]
+master
+worker
